@@ -8,6 +8,7 @@ namespace InmobiliariaConstante.Models
 {
     public class Propietario
     {
+        
         [Key]
         [Display(Name = "Código")]
         public int IdPropietario { get; set; }
@@ -22,5 +23,9 @@ namespace InmobiliariaConstante.Models
         public string Email { get; set; }
         [Required, DataType(DataType.Password)]
         public string Clave { get; set; }
+        public override string ToString()
+        {
+            return Nombre + " " + Apellido;
+        }
     }
 }

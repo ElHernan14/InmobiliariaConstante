@@ -1,0 +1,54 @@
+﻿@model InmobiliariaConstante.Models.Contrato
+
+@{
+    ViewData["Title"] = "Detalles de Contrato";
+}
+
+<h1>Detalles</h1>
+
+<div>
+    <h4>Contrato</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IdInquilino)
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.inquilino.Nombre @Model.inquilino.Apellido
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IdInmueble)
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.inmueble.Direccion
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IdGarante)
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.garante.Nombre @Model.garante.Apellido
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FechaDesde)
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.FechaDesde.ToString("d")
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FechaHasta)
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.FechaHasta.ToString("d")
+        </dd>
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("Editar", "Edit", new { id = Model.Id  }) |
+    <a asp-action="Index">Volver a la lista</a>
+</div>
