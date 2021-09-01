@@ -43,7 +43,7 @@
                 <select class="form-control" name="PropietarioId">
                     @foreach (Propietario val in Propietarios)
                     {
-                        @:<option selected value="@val.IdPropietario">@(val.Nombre +" "+ val.Apellido)</option>
+                        @:<option @(val.IdPropietario == Model.PropietarioId ? "selected": "") value="@val.IdPropietario">@(val.Nombre +" "+ val.Apellido)</option>
                     }
                 </select>
                 <span asp-validation-for="PropietarioId" class="text-danger"></span>
