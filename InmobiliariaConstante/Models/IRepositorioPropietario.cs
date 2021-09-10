@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using InmobiliariaConstante.Models;
 
-namespace Inmobiliaria_.Net_Core.Models
+namespace InmobiliariaConstante.Models
 {
     public interface IRepositorioPropietario : IRepositorio<Propietario>
 	{

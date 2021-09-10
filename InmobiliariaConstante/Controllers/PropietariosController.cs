@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using InmobiliariaConstante.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,14 +11,15 @@ using Microsoft.Extensions.Configuration;
 
 namespace InmobiliariaConstante.Controllers
 {
+    [Authorize]
     public class PropietariosController : Controller
     {
-        private readonly RepositorioPropietario repositorio;
+        private readonly IRepositorioPropietario repositorio;
         private readonly IConfiguration config;
 
-        public PropietariosController(IConfiguration config)
+        public PropietariosController(IConfiguration config, IRepositorioPropietario repositorio)
         {
-            this.repositorio = new RepositorioPropietario(config);
+            this.repositorio = repositorio;
             this.config = config;
         }
 

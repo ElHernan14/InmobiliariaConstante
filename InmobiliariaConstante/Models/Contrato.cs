@@ -29,5 +29,8 @@ namespace InmobiliariaConstante.Models
 
         public DateTime FechaDesde { get; set; }
         public DateTime FechaHasta { get; set; }
+        [Display(Name = "Cuotas Contrato")]
+        public int Cuotas { get; set; }
+        public bool Estado { get; set; }
     }
 }

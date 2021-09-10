@@ -26,14 +26,26 @@
                 <span asp-validation-for="IdInquilino" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="FechaDesde" class="control-label"></label>
+                <input asp-for="FechaDesde" id="selectDesde" class="form-control" type="date" />
+                <span asp-validation-for="FechaDesde" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FechaHasta" class="control-label"></label>
+                <input asp-for="FechaHasta" id="selectHasta" class="form-control" type="date" />
+                <span asp-validation-for="FechaHasta" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label class="control-label">Inmueble: </label>
-                <select class="form-control" name="IdInmueble">
-                    @foreach (Inmueble val in Inmuebles)
-                    {
-                        @:<option selected value="@val.Id">@(val.Direccion)</option>
-                    }
+                <select class="form-control" id="selectInmueble" name="IdInmueble">
+                    <option selected value="Seleccione un Inmueble">-- Seleccione un Inmueble --</option>
                 </select>
                 <span asp-validation-for="IdInmueble" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Cuotas" class="control-label"></label>
+                <input asp-for="Cuotas" class="form-control" />
+                <span asp-validation-for="Cuotas" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label class="control-label">Garante: </label>
@@ -44,16 +56,6 @@
                     }
                 </select>
                 <span asp-validation-for="IdGarante" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FechaDesde" class="control-label"></label>
-                <input asp-for="FechaDesde" class="form-control" type="date" />
-                <span asp-validation-for="FechaDesde" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FechaHasta" class="control-label"></label>
-                <input asp-for="FechaHasta" class="form-control" type="date"/>
-                <span asp-validation-for="FechaHasta" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Crear" class="btn btn-primary" />
@@ -69,3 +71,39 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+<script type="text/javascript">
+    var selectDesde = document.getElementById('selectDesde');
+    var selectHasta = document.getElementById('selectHasta');
+    var selectInmueble = document.getElementById('selectInmueble');
+    function buscarInmuebles() {
+        let myObjectJSON = {};
+        var FechaDesde = selectDesde.value;
+        var FechaHasta = selectHasta.value;
+        url = `@Url.Action("Buscar", "Contrato", new { fechaDesde = "fechaDesde", fechaHasta = "fechaHasta" })`;
+        url = url.replace("fechaDesde", FechaDesde)
+            .replace("fechaHasta", FechaHasta);
+        return $.ajax({
+            url: url,
+        }).done(res => {
+            myObjectJSON = res;
+            if (!myObjectJSON.datos) {
+                return;
+            }
+            selectInmueble.innerHTML = "";
+            for (let x of myObjectJSON.datos) {
+                let option = document.createElement("option");
+                option.value = x.id;
+                option.text = x.direccion+" "+x.precio;
+                selectInmueble.add(option);
+            }
+        }).fail(res => {
+            console.log("Error: ", res);
+        });
+    }
+
+
+    selectHasta.addEventListener('change', () => {
+        buscarInmuebles();
+    });
+
+</script>

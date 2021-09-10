@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace InmobiliariaConstante.Models
 {
-    public class RepositorioContrato : RepositorioBase
+    public class RepositorioContrato : RepositorioBase, IRepositorioContrato
     {
         public RepositorioContrato(IConfiguration configuration) : base(configuration)
         {
@@ -19,8 +19,8 @@ namespace InmobiliariaConstante.Models
             int res = -1;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"INSERT INTO Contrato (IdInquilino, IdInmueble, FechaDesde, FechaHasta, IdGarante) " +
-                    "VALUES (@IdInquilino, @IdInmueble, @FechaDesde, @FechaHasta, @IdGarante);" +
+                string sql = $"INSERT INTO Contrato (IdInquilino, IdInmueble, FechaDesde, FechaHasta, IdGarante, Cuotas, Estado) " +
+                    "VALUES (@IdInquilino, @IdInmueble, @FechaDesde, @FechaHasta, @IdGarante, @Cuotas, @Estado);" +
                     "SELECT SCOPE_IDENTITY();";//devuelve el id insertado (LAST_INSERT_ID para mysql)
                 using (var command = new SqlCommand(sql, connection))
                 {
@@ -30,6 +30,8 @@ namespace InmobiliariaConstante.Models
                     command.Parameters.AddWithValue("@FechaDesde", entidad.FechaDesde);
                     command.Parameters.AddWithValue("@FechaHasta", entidad.FechaHasta);
                     command.Parameters.AddWithValue("@IdGarante", entidad.IdGarante);
+                    command.Parameters.AddWithValue("@Cuotas", entidad.Cuotas);
+                    command.Parameters.AddWithValue("@Estado", entidad.Estado);
                     connection.Open();
                     res = Convert.ToInt32(command.ExecuteScalar());
                     entidad.Id = res;
@@ -61,7 +63,7 @@ namespace InmobiliariaConstante.Models
             {
                 string sql = "UPDATE Contrato SET " +
                     "IdInquilino=@IdInquilino, IdInmueble=@IdInmueble, FechaDesde=@FechaDesde, FechaHasta=@FechaHasta, IdGarante=@IdGarante " +
-                    "WHERE Id = @id";
+                    ", Estado=@Estado, Cuotas=@Cuotas WHERE Id = @id";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.Parameters.AddWithValue("@IdInquilino", entidad.IdInquilino);
@@ -69,7 +71,9 @@ namespace InmobiliariaConstante.Models
                     command.Parameters.AddWithValue("@FechaDesde", entidad.FechaDesde);
                     command.Parameters.AddWithValue("@FechaHasta", entidad.FechaHasta);
                     command.Parameters.AddWithValue("@IdGarante", entidad.IdGarante);
-                    command.Parameters.AddWithValue("@id", entidad.Id);
+                    command.Parameters.AddWithValue("@ValorInmueble", entidad.Cuotas);
+                    command.Parameters.AddWithValue("@IdGarante", entidad.IdGarante);
+                    command.Parameters.AddWithValue("@Estado", entidad.Estado);
                     command.CommandType = CommandType.Text;
                     connection.Open();
                     res = command.ExecuteNonQuery();
@@ -85,8 +89,8 @@ namespace InmobiliariaConstante.Models
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string sql = "SELECT c.Id, c.IdInquilino, c.IdInmueble, c.FechaDesde, c.FechaHasta, c.IdGarante," +
-                    " i.Nombre, i.Apellido," +
-                    "m.Direccion," +
+                    " c.Cuotas, c.Estado ,i.Nombre, i.Apellido," +
+                    "m.Direccion, m.Precio," +
                     "g.Nombre, g.Apellido" +
                     " FROM Contrato c INNER JOIN Inquilinos i ON i.IdInquilino = C.IdInquilino " +
                     "INNER JOIN Inmuebles m ON m.Id = c.IdInmueble" +
@@ -106,22 +110,25 @@ namespace InmobiliariaConstante.Models
                             IdInquilino = reader.GetInt32(1),
                             IdInmueble = reader.GetInt32(2),
                             IdGarante = reader.GetInt32(5),
+                            Cuotas = reader.GetInt32(6),
+                            Estado = reader.GetBoolean(7),
                             inquilino = new Inquilino
                             {
                                 IdInquilino = reader.GetInt32(1),
-                                Nombre = reader.GetString(6),
-                                Apellido = reader.GetString(7),
+                                Nombre = reader.GetString(8),
+                                Apellido = reader.GetString(9),
                             },
                             inmueble = new Inmueble
                             {
                                 Id = reader.GetInt32(2),
-                                Direccion = reader.GetString(8)
+                                Direccion = reader.GetString(10),
+                                Precio = reader.GetDecimal(11)
                             },
                             garante = new Garante
                             {
                                 Id = reader.GetInt32(5),
-                                Nombre = reader.GetString(9),
-                                Apellido = reader.GetString(10)
+                                Nombre = reader.GetString(12),
+                                Apellido = reader.GetString(13)
                             }
                         };
                         res.Add(entidad);
@@ -133,12 +140,13 @@ namespace InmobiliariaConstante.Models
         }
 
         public Contrato ObtenerPorId(int id)
-        {Contrato entidad = null;
+        {
+            Contrato entidad = null;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string sql = $"SELECT c.Id, c.IdInquilino, c.IdInmueble, c.FechaDesde, c.FechaHasta, c.IdGarante," +
-                    " i.Nombre, i.Apellido," +
-                    "m.Direccion," +
+                    " c.Cuotas, c.Estado, i.Nombre, i.Apellido," +
+                    "m.Direccion, m.Precio," +
                     "g.Nombre, g.Apellido" +
                     " FROM Contrato c INNER JOIN Inquilinos i ON i.IdInquilino = C.IdInquilino" +
                     " INNER JOIN Inmuebles m ON m.Id = c.IdInmueble" +
@@ -159,22 +167,25 @@ namespace InmobiliariaConstante.Models
                             IdInquilino = reader.GetInt32(1),
                             IdInmueble = reader.GetInt32(2),
                             IdGarante = reader.GetInt32(5),
+                            Cuotas = reader.GetInt32(6),
+                            Estado = reader.GetBoolean(7),
                             inquilino = new Inquilino
                             {
                                 IdInquilino = reader.GetInt32(1),
-                                Nombre = reader.GetString(6),
-                                Apellido = reader.GetString(7),
+                                Nombre = reader.GetString(8),
+                                Apellido = reader.GetString(9),
                             },
                             inmueble = new Inmueble
                             {
                                 Id = reader.GetInt32(2),
-                                Direccion = reader.GetString(8)
+                                Direccion = reader.GetString(10),
+                                Precio = reader.GetDecimal(11)
                             },
                             garante = new Garante
                             {
                                 Id = reader.GetInt32(5),
-                                Nombre = reader.GetString(9),
-                                Apellido = reader.GetString(10)
+                                Nombre = reader.GetString(12),
+                                Apellido = reader.GetString(13)
                             }
                         };
                     }
@@ -184,7 +195,38 @@ namespace InmobiliariaConstante.Models
             return entidad;
         }
 
-      
+        public IList<Inmueble> obtenerInmuebles(DateTime fechaDesde, DateTime fechaHasta)
+        {
+            IList<Inmueble> inmuebles = new List<Inmueble>();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sql = $"SELECT i.Id, i.Direccion, i.Precio FROM Inmuebles i LEFT JOIN (SELECT c.IdInmueble FROM Contrato c"
+                                + " WHERE(c.FechaDesde  BETWEEN @fechaDesde AND @fechaHasta)"
+                                + " OR (c.FechaHasta  BETWEEN @fechaDesde AND @fechaHasta)) x"
+                                + " ON i.Id = x.IdInmueble"
+                                + " WHERE x.IdInmueble IS NULL; ";
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("@fechaDesde", fechaDesde);
+                    command.Parameters.AddWithValue("@fechaHasta", fechaHasta);
+                    connection.Open();
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Inmueble entidad = new Inmueble
+                        {
+                            Id = reader.GetInt32(0),
+                            Direccion = reader.GetString(1),
+                            Precio = reader.GetDecimal(2)
+                        };
+                        inmuebles.Add(entidad);
+                    }
+                    connection.Close();
+
+                }
+            }
+            return inmuebles;
+        }
     }
 }
 

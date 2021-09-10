@@ -1,0 +1,42 @@
+﻿@model InmobiliariaConstante.Models.Pago
+
+@{
+    ViewData["Title"] = "Crear Pago";
+    var id = ViewBag.Id;
+    var monto = ViewBag.MontoSugerido;
+    var restante = ViewBag.MontoRestante;
+}
+
+<h1>Cargar Pago</h1>
+
+<h4>Pago</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        @if (monto != null)
+        {
+            <p>Monto restante de pago: <h4 style="color:mediumvioletred;font-weight:bold">@restante</h4></p><br>
+            <p>Valor de Cuota sugerido: <h5 style="color:lawngreen;font-weight:bold">@monto</h5></p><br>
+        }
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Monto" class="control-label"></label>
+                <input asp-for="Monto" class="form-control" />
+                <span asp-validation-for="Monto" class="text-danger"></span>
+            </div>
+            <input asp-for="IdContrato" class="form-control" type="hidden" value="@(id)" />
+            <div class="form-group">
+                <input type="submit" value="Pagar" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Volver atras</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -3,26 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using InmobiliariaConstante.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
 namespace InmobiliariaConstante.Controllers
 {
+    [Authorize]
     public class ContratoController : Controller
     {
-        private readonly RepositorioInquilino repoInquilino;
-        private readonly RepositorioInmueble repoInmueble;
-        private readonly RepositorioGarante repoGarante;
-        private readonly RepositorioContrato repoContrato;
+        private readonly IRepositorioInquilino repoInquilino;
+        private readonly IRepositorioInmueble repoInmueble;
+        private readonly IRepositorioContrato repoContrato;
+        private readonly IRepositorioGarante repoGarante;
         private readonly IConfiguration config;
 
-        public ContratoController(IConfiguration config)
+        public ContratoController(IConfiguration config, IRepositorioInquilino repoInquilino, IRepositorioInmueble repoInmueble, IRepositorioContrato repoContrato, IRepositorioGarante repoGarante)
         {
-            this.repoInquilino = new RepositorioInquilino(config);
-            this.repoInmueble = new RepositorioInmueble(config);
-            this.repoContrato = new RepositorioContrato(config);
-            this.repoGarante = new RepositorioGarante(config);
+            this.repoInquilino = repoInquilino;
+            this.repoInmueble = repoInmueble;
+            this.repoContrato = repoContrato;
+            this.repoGarante = repoGarante;
+            this.config = config;
         }
 
         // GET: ContratoController
@@ -118,10 +121,20 @@ namespace InmobiliariaConstante.Controllers
         // POST: ContratoController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, Contrato entidad)
-        {
+        public ActionResult Delete(int id, Contrato entidad) {
+            //DateTime fechaDesde = entidad.FechaDesde;
+            //DateTime fechaHasta = entidad.FechaHasta;
+            //var hoy = DateTime.Now;
+            //var Date = hoy.Date.ToString("dd-MM-yyyy");
+            //var diferencia = fechaDesde.Day - fechaHasta.Day;
+            //var mitad = diferencia / 2;
+            //if (diferencia)
+            //{
+
+            //}
             try
             {
+                var contrato = repoContrato.ObtenerPorId(id);
                 repoContrato.Baja(id);
                 return RedirectToAction(nameof(Index));
             }
@@ -130,6 +143,21 @@ namespace InmobiliariaConstante.Controllers
                 ViewBag.Error = ex.Message;
                 ViewBag.StackTrate = ex.StackTrace;
                 return View(entidad);
+            }
+        }
+
+        //POST: Inmuebles/Buscar/5
+        [Route("[controller]/Buscar/{fechaDesde}/{FechaHasta}", Name = "Buscar")]
+        public IActionResult Buscar(DateTime fechaDesde, DateTime fechaHasta)
+        {
+            try
+            {
+                var res = repoContrato.obtenerInmuebles(fechaDesde, fechaHasta);
+                return Json(new { Datos = res });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Error = ex.Message });
             }
         }
     }

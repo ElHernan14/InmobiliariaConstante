@@ -33,6 +33,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.PropietarioId)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Estado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Precio)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -60,8 +66,24 @@
             <td>
                 @(item.Duenio.Nombre+" "+item.Duenio.Apellido)
             </td>
+            @{ if (item.Estado == false)
+                {
+                  <td>
+                     No Disponible
+                  </td>
+                }
+                else
+                {
+                   <td>
+                     Disponible
+                  </td>
+                }
+            }
             <td>
-                @Html.ActionLink("Editar", "Edit", new { id=item.Id  }) |
+                @Html.DisplayFor(modelItem => item.Precio)
+            </td>
+            <td>
+                @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
                 @Html.ActionLink("Detalles", "Details", new { id = item.Id }) |
                 @Html.ActionLink("Eliminar", "Eliminar", new { id = item.Id })
             </td>

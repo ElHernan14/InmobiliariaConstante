@@ -19,7 +19,10 @@
                 @Html.DisplayNameFor(model => model.IdInquilino)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IdInmueble)
+                @Html.DisplayNameFor(model => model.inmueble.Direccion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cuotas)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.IdGarante)
@@ -46,6 +49,9 @@
                 @(item.inmueble.Direccion)
             </td>
             <td>
+                @(item.Cuotas)
+            </td>
+            <td>
                 @(item.garante.Nombre + " " + item.garante.Apellido)
             </td>
             <td>
@@ -55,9 +61,10 @@
                 @(item.FechaHasta.ToString("d"))
             </td>
             <td>
-                @Html.ActionLink("Editar", "Edit", new { id=item.Id}) |
+                @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
                 @Html.ActionLink("Detalles", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Eliminar", "Delete", new { id=item.Id })
+                @Html.ActionLink("Eliminar", "Delete", new { id = item.Id }) |
+                @Html.ActionLink("Pagos", "Index", "Pago", new { id = item.Id})
             </td>
         </tr>
 }

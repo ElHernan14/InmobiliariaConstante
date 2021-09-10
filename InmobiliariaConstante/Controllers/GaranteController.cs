@@ -3,20 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using InmobiliariaConstante.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
 namespace InmobiliariaConstante.Controllers
 {
+    [Authorize]
     public class GaranteController : Controller
     {
-        private readonly RepositorioGarante repositorio;
+        private readonly IRepositorioGarante repositorio;
         private readonly IConfiguration config;
 
-        public GaranteController(IConfiguration config)
+        public GaranteController(IConfiguration config, IRepositorioGarante repositorio)
         {
-            this.repositorio = new RepositorioGarante(config);
+            this.repositorio = repositorio;
             this.config = config;
         }
 

@@ -18,8 +18,9 @@ namespace InmobiliariaConstante.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(bool error)
         {
+            ViewBag.Error = error;
             return View();
         }
 

@@ -23,5 +23,10 @@ namespace InmobiliariaConstante.Models
         public int PropietarioId { get; set; }
         [ForeignKey(nameof(PropietarioId))]
         public Propietario Duenio { get; set; }
+        [Display(Name = "Estado")]
+        public bool Estado { get; set; }
+        [Required]
+        [Display(Name = "Precio")]
+        public decimal Precio { get; set; }
     }
 }

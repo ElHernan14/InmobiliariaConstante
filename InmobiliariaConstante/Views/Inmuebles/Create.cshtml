@@ -39,6 +39,11 @@
                 <span asp-validation-for="Longitud" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Precio" class="control-label"></label>
+                <input asp-for="Precio" class="form-control" />
+                <span asp-validation-for="Precio" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label class="control-label">Propietario: </label>
                 <select class="form-control" name="PropietarioId">
                     @foreach (Propietario val in Propietarios)
@@ -48,6 +53,7 @@
                 </select>
                 <span asp-validation-for="PropietarioId" class="text-danger"></span>
             </div>
+            <input asp-for="Estado" type="hidden" value="true" class="form-control" />
             <div class="form-group">
                 <input type="submit" value="Crear" class="btn btn-primary" />
             </div>

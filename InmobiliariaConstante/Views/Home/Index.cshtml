@@ -3,5 +3,11 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Bienvenido</h1>
+    <h1 class="display-4">Bienvenido a Inmobiliaria Constante Raices</h1>
 </div>
+@if (ViewBag.Error || !User.Identity.IsAuthenticated)
+{
+    await Html.RenderPartialAsync("_Login", new LoginView());
+    <a href="@Url.RouteUrl("login")">Ir al login</a><br>
+    <a href="@Url.ActionLink("Create","Usuarios")">Crear Usuario</a>
+}

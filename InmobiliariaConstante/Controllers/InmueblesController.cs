@@ -3,22 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using InmobiliariaConstante.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
 namespace InmobiliariaConstante.Controllers
 {
+    [Authorize]
     public class InmueblesController : Controller
     {
-        private readonly RepositorioInmueble repositorio;
-        private readonly RepositorioPropietario repoPropietario;
+        private readonly IRepositorioInmueble repositorio;
+        private readonly IRepositorioPropietario repoPropietario;
         private readonly IConfiguration config;
 
-        public InmueblesController(IConfiguration config)
+        public InmueblesController(IConfiguration config, IRepositorioInmueble repositorio, IRepositorioPropietario repoPropietario)
         {
-            this.repositorio= new RepositorioInmueble(config);
-            this.repoPropietario = new RepositorioPropietario(config);
+            this.repositorio= repositorio;
+            this.repoPropietario = repoPropietario;
+            this.config = config;
         }
 
         // GET: Inmueble
@@ -67,20 +70,14 @@ namespace InmobiliariaConstante.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
-                {
                     repositorio.Alta(entidad);
                     TempData["Id"] = entidad.Id;
                     return RedirectToAction(nameof(Index));
-                }
-                else
-                {
-                    ViewBag.Propietarios = repoPropietario.ObtenerTodos();
-                    return View(entidad);
-                }
+
             }
             catch (Exception ex)
             {
+                ViewBag.Propietarios = repoPropietario.ObtenerTodos();
                 ViewBag.Error = ex.Message;
                 ViewBag.StackTrate = ex.StackTrace;
                 return View(entidad);
