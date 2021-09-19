@@ -75,6 +75,9 @@ namespace InmobiliariaConstante.Controllers
             {
                 ViewBag.Error = ex.Message;
                 ViewBag.StackTrate = ex.StackTrace;
+                ViewBag.Inmuebles = repoInmueble.ObtenerTodos();
+                ViewBag.Inquilinos = repoInquilino.ObtenerTodos();
+                ViewBag.Garantes = repoGarante.ObtenerTodos();
                 return View(entidad);
             }
         }
@@ -147,12 +150,13 @@ namespace InmobiliariaConstante.Controllers
         }
 
         //POST: Inmuebles/Buscar/5
-        [Route("[controller]/Buscar/{fechaDesde}/{FechaHasta}", Name = "Buscar")]
-        public IActionResult Buscar(DateTime fechaDesde, DateTime fechaHasta)
+        [Route("[controller]/Buscar/{fechaDesde}/{FechaHasta}/{idActual}", Name = "Buscar")]
+        public IActionResult Buscar(DateTime fechaDesde, DateTime fechaHasta, int idActual)
         {
             try
             {
-                var res = repoContrato.obtenerInmuebles(fechaDesde, fechaHasta);
+
+                    var res = repoContrato.obtenerInmuebles(fechaDesde,fechaHasta,idActual);
                 return Json(new { Datos = res });
             }
             catch (Exception ex)

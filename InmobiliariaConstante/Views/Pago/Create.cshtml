@@ -16,7 +16,7 @@
         @if (monto != null)
         {
             <p>Monto restante de pago: <h4 style="color:mediumvioletred;font-weight:bold">@restante</h4></p><br>
-            <p>Valor de Cuota sugerido: <h5 style="color:lawngreen;font-weight:bold">@monto</h5></p><br>
+            <p>Valor de Cuota sugerido: <h5 style="color:lawngreen;font-weight:bold">@Math.Round(monto)</h5></p><br>
         }
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -34,7 +34,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Volver atras</a>
+    <a href="@Url.ActionLink("Index","Pago",new {id = id})">Volver atras</a>
 </div>
 
 @section Scripts {

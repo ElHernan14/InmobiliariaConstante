@@ -31,12 +31,9 @@ namespace InmobiliariaConstante.Controllers
             var contrato = repoContrato.ObtenerPorId(id);
             var valorInmueble = contrato.inmueble.Precio;
             var cuotas = contrato.Cuotas;
-            if(total > 0)
+            if (total >= valorInmueble)
             {
-                if (total >= valorInmueble)
-                {
-                    ViewBag.Mensaje = "Este Contrato ha finalizado";
-                }
+              ViewBag.Mensaje = "Este Contrato ha finalizado";
             }
             ViewBag.Id = id;
             ViewBag.ValorInmueble = valorInmueble;
@@ -71,6 +68,8 @@ namespace InmobiliariaConstante.Controllers
         public ActionResult Details(int id)
         {
             var entidad = repoPago.ObtenerPorId(id);
+            ViewBag.IdContrato = entidad.IdContrato;
+            ViewBag.Id = entidad.Id;
             return View(entidad);
         }
 
@@ -139,8 +138,9 @@ namespace InmobiliariaConstante.Controllers
 
         public ActionResult Edit(int id)
         {
-            var entidad = repoContrato.ObtenerPorId(id);
-            var total = repoPago.ObtenerTotal(id);
+            var pago = repoPago.ObtenerPorId(id);
+            var entidad = repoContrato.ObtenerPorId(pago.IdContrato);
+            var total = repoPago.ObtenerTotal(pago.IdContrato);
             var valorInmueble = entidad.inmueble.Precio;
             var cuotas = entidad.Cuotas;
             var valor = valorInmueble / cuotas;
@@ -154,14 +154,14 @@ namespace InmobiliariaConstante.Controllers
                 ViewBag.MontoSugerido = valor;
             }
             ViewBag.MontoRestante = diferencia;
-            ViewBag.Id = id;
-            return View(entidad);
+            ViewBag.Id = entidad.Id;
+            return View(pago);
         }
 
         // POST: ContratoController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit( Pago pago)
+        public ActionResult Edit(Pago pago)
         {
             try
             {
@@ -183,7 +183,7 @@ namespace InmobiliariaConstante.Controllers
                     pago.NumeroDePago = pagoViejo.NumeroDePago;
                     pago.FechaDePago = pagoViejo.FechaDePago;
                     repoPago.Modificacion(pago);
-                    return RedirectToAction("index", new { id });
+                    return RedirectToAction("Index", new { id = id });
                 }
                 else
                 {

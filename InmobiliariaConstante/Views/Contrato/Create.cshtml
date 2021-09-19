@@ -17,10 +17,10 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label class="control-label">Inquilino: </label>
-                <select class="form-control" name="IdInquilino">
+                <select class="form-control" name="IdInquilino" asp-for="IdInquilino" >
                     @foreach (Inquilino val in Inquilinos)
                     {
-                        @:<option selected value="@val.IdInquilino">@(val.Nombre +" "+ val.Apellido)</option>
+                        @:<option value="@val.IdInquilino">@(val.Nombre +" "+ val.Apellido)</option>
                     }
                 </select>
                 <span asp-validation-for="IdInquilino" class="text-danger"></span>
@@ -37,10 +37,10 @@
             </div>
             <div class="form-group">
                 <label class="control-label">Inmueble: </label>
-                <select class="form-control" id="selectInmueble" name="IdInmueble">
+                <select asp-for="IdInmueble" class="form-control" id="selectInmueble" name="IdInmueble">
                     <option selected value="Seleccione un Inmueble">-- Seleccione un Inmueble --</option>
                 </select>
-                <span asp-validation-for="IdInmueble" class="text-danger"></span>
+                <span asp-validation-for="IdInmueble" class="text-danger">Seleccione un Inmueble por favor</span>
             </div>
             <div class="form-group">
                 <label asp-for="Cuotas" class="control-label"></label>
@@ -49,10 +49,10 @@
             </div>
             <div class="form-group">
                 <label class="control-label">Garante: </label>
-                <select class="form-control" name="IdGarante">
+                <select asp-for="IdGarante"  class="form-control" name="IdGarante">
                     @foreach (Garante val in Garantes)
                     {
-                        @:<option selected value="@val.Id">@(val.Nombre +" "+ val.Apellido)</option>
+                        @:<option  value="@val.Id">@(val.Nombre +" "+ val.Apellido)</option>
                     }
                 </select>
                 <span asp-validation-for="IdGarante" class="text-danger"></span>
@@ -67,10 +67,6 @@
 <div>
     <a asp-action="Index">Volver a la lista</a>
 </div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
 <script type="text/javascript">
     var selectDesde = document.getElementById('selectDesde');
     var selectHasta = document.getElementById('selectHasta');
@@ -79,9 +75,10 @@
         let myObjectJSON = {};
         var FechaDesde = selectDesde.value;
         var FechaHasta = selectHasta.value;
-        url = `@Url.Action("Buscar", "Contrato", new { fechaDesde = "fechaDesde", fechaHasta = "fechaHasta" })`;
+        url = `@Url.Action("Buscar", "Contrato", new { fechaDesde = "fechaDesde", fechaHasta = "fechaHasta" , idActual = "idActual"})`;
         url = url.replace("fechaDesde", FechaDesde)
-            .replace("fechaHasta", FechaHasta);
+            .replace("fechaHasta", FechaHasta)
+            .replace("idActual",null);
         return $.ajax({
             url: url,
         }).done(res => {
@@ -93,7 +90,7 @@
             for (let x of myObjectJSON.datos) {
                 let option = document.createElement("option");
                 option.value = x.id;
-                option.text = x.direccion+" "+x.precio;
+                option.text = x.direccion+" $"+x.precio;
                 selectInmueble.add(option);
             }
         }).fail(res => {
@@ -103,7 +100,26 @@
 
 
     selectHasta.addEventListener('change', () => {
-        buscarInmuebles();
+        const $select = document.querySelector("#selectInmueble");
+        var FechaDesde = selectDesde.value;
+        var FechaHasta = selectHasta.value;
+        if (FechaDesde < FechaHasta) {
+            buscarInmuebles();
+        } else {
+            for (let i = $select.options.length; i >= 0; i--) {
+                $select.remove(i);
+            }
+            const option = document.createElement('option');
+            option.text = "-- Seleccione fechas correctas --";
+            $select.appendChild(option);
+            alert("La Fecha de inicio debe ser menor a la final")
+            return false;
+        }
+
     });
 
 </script>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

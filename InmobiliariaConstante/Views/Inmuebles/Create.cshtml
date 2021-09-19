@@ -45,7 +45,7 @@
             </div>
             <div class="form-group">
                 <label class="control-label">Propietario: </label>
-                <select class="form-control" name="PropietarioId">
+                <select class="form-control" name="PropietarioId" asp-for="PropietarioId">
                     @foreach (Propietario val in Propietarios)
                     {
                         @:<option selected value="@val.IdPropietario">@(val.Nombre +" "+ val.Apellido)</option>
