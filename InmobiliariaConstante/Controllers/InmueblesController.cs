@@ -70,6 +70,7 @@ namespace InmobiliariaConstante.Controllers
         {
             try
             {
+                entidad.Estado = true;
                     repositorio.Alta(entidad);
                     TempData["Id"] = entidad.Id;
                     return RedirectToAction(nameof(Index));
