@@ -1,2 +1,118 @@
-﻿<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+﻿<script type="text/javascript">
+    var tituloContrato = document.getElementById("tcontrato");
+    var titulo = document.getElementById("titulo");
+    var fechaInicio = document.getElementById('fechaInicio');
+    var fechaFinal = document.getElementById('fechaFinal');
+
+    function InmueblesXContrato(id, direccion) {
+        let myObjectJSON = {};
+        url = `@Url.Action("InmueblesXContrato", "Inmuebles", new { id = "idInmueble" })`;
+        url = url.replace("idInmueble", id)
+        return $.ajax({
+            url: url,
+        }).done(res => {
+            myObjectJSON = res;
+            if (!myObjectJSON.datos) {
+                return alert("Este Inmueble no tiene contratos");
+            }
+            tituloContrato.innerHTML = "";
+            tituloContrato.innerHTML = direccion;
+            $("#tbodycontratos tr").remove();
+            for (let x of myObjectJSON.datos) {
+                let estado;
+                if (x.estado == true) { estado = "Contrato cancelado" }
+                else { estado = "Contrato cancelado" }
+                $("#tbodycontratos").append("<tr>"
+                + "<td>" + x.id + "</td>"
+                + "<td>" + x.inquilino.nombre + " " + x.inquilino.apellido + "</td>"
+                + "<td>" + x.cuotas + "</td>"
+                + "<td>" + estado + "</td>"
+                + "<td>" + x.fechaDesde +"</td>"
+                + "<td>" + x.fechaHasta +"</td>"
+                + "</tr> ");
+            }
+        }).fail(res => {
+            console.log("Error: ", res);
+        });
+    }
+
+    function buscarInmuebles(id, nombre, apellido) {
+        let myObjectJSON = {};
+        url = `@Url.Action("BuscarInmuebles", "Inmuebles", new { id = "idPropietario" })`;
+        url = url.replace("idPropietario", id)
+        return $.ajax({
+            url: url,
+        }).done(res => {
+            myObjectJSON = res;
+            if (!myObjectJSON.datos) {
+                return alert("Este Propietario No tiene inmuebles");
+            }
+            titulo.innerHTML = "";
+            titulo.innerHTML = "Inmuebles de: " + nombre + " " + apellido;
+            $("#tbodypa tr").remove();
+            for (let x of myObjectJSON.datos) {
+                let estado;
+                if (x.estado == true) { estado = "Disponible" }
+                else { estado = "No disponible" }
+                var button = `<button type="button" class="btn btn-primary" data-toggle="modal" `
+                    + `onclick = "InmueblesXContrato( ${x.id},' ${x.direccion} ')" data-target="#inmueblesXContrato">`
+                    + ` Ver Contratos </button>`;
+                $("#tbodypa").append("<tr>"
+                    + "<td>" + x.id + "</td>"
+                    + "<td>" + x.direccion + "</td>"
+                    + "<td>" + x.ambientes + "</td>"
+                    + "<td>" + x.superficie + "</td>"
+                    + "<td>" + x.latitud + "</td>"
+                    + "<td>" + x.longitud + "</td>"
+                    + "<td>" + estado + "</td>"
+                    + "<td>" + x.precio + "</td>"
+                    + "<td>" + button + "</td>"
+                    + "</tr> ");
+            }
+        }).fail(res => {
+            console.log("Error: ", res);
+        });
+    }
+    function buscarInmueblesDisponibles() {
+        let myObjectJSON = {};
+        var fechai = fechaInicio.value;
+        var fechaf = fechaFinal.value;
+        url = `@Url.Action("Buscar", "Contrato", new { fechaDesde = "fechaDesde", fechaHasta = "fechaHasta", idActual = "idActual" })`;
+        url = url.replace("fechaDesde", fechai)
+            .replace("fechaHasta", fechaf)
+            .replace("idActual",null);
+        return $.ajax({
+            url: url,
+        }).done(res => {
+            myObjectJSON = res;
+            if (!myObjectJSON.datos) {
+                return alert("No hay inmuebles disponibles");
+            }
+            titulo.innerHTML = "";
+            titulo.innerHTML = "Inmuebles Disponibles";
+            $("#tbodypa tr").remove();
+            for (let x of myObjectJSON.datos) {
+                let estado;
+                if (x.estado == true) { estado = "Disponible" }
+                else { estado = "No disponible"}
+                $("#tbodypa").append("<tr>"
+                    + "<td>" + x.id + "</td>"
+                    + "<td>" + x.direccion + "</td>"
+                    + "<td>" + x.ambientes + "</td>"
+                    + "<td>" + x.superficie + "</td>"
+                    + "<td>" + x.latitud + "</td>"
+                    + "<td>" + x.longitud + "</td>"
+                    + "<td>" + estado + "</td>"
+                    + "<td>" + x.precio + "</td>"
+                    + "</tr> ");
+            }
+        }).fail(res => {
+            console.log("Error: ", res);
+        });
+    }
+</script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>

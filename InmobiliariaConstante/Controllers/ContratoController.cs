@@ -17,20 +17,29 @@ namespace InmobiliariaConstante.Controllers
         private readonly IRepositorioInmueble repoInmueble;
         private readonly IRepositorioContrato repoContrato;
         private readonly IRepositorioGarante repoGarante;
+        private readonly IRepositorioPago repoPago;
         private readonly IConfiguration config;
 
-        public ContratoController(IConfiguration config, IRepositorioInquilino repoInquilino, IRepositorioInmueble repoInmueble, IRepositorioContrato repoContrato, IRepositorioGarante repoGarante)
+        public ContratoController(IConfiguration config, IRepositorioPago repoPago,IRepositorioInquilino repoInquilino, IRepositorioInmueble repoInmueble, IRepositorioContrato repoContrato, IRepositorioGarante repoGarante)
         {
             this.repoInquilino = repoInquilino;
             this.repoInmueble = repoInmueble;
             this.repoContrato = repoContrato;
             this.repoGarante = repoGarante;
+            this.repoPago = repoPago;
             this.config = config;
         }
 
         // GET: ContratoController
         public ActionResult Index()
         {
+            var inquilino = TempData["Inquilino"];
+            var cuotas = TempData["Cuotas"];
+            if (inquilino != null)
+            {
+                ViewBag.Cuotas = cuotas;
+                ViewBag.Inquilino = inquilino;
+            }
             var lista = repoContrato.ObtenerTodos();
             return View(lista);
         }
@@ -60,6 +69,7 @@ namespace InmobiliariaConstante.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    entidad.Estado = true;
                     repoContrato.Alta(entidad);
                     return RedirectToAction(nameof(Index));
                 }
@@ -124,20 +134,30 @@ namespace InmobiliariaConstante.Controllers
         // POST: ContratoController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, Contrato entidad) {
-            //DateTime fechaDesde = entidad.FechaDesde;
-            //DateTime fechaHasta = entidad.FechaHasta;
-            //var hoy = DateTime.Now;
-            //var Date = hoy.Date.ToString("dd-MM-yyyy");
-            //var diferencia = fechaDesde.Day - fechaHasta.Day;
-            //var mitad = diferencia / 2;
-            //if (diferencia)
-            //{
-
-            //}
+        public ActionResult Delete(int id, Contrato entidad) {       
             try
             {
                 var contrato = repoContrato.ObtenerPorId(id);
+                DateTime fechaDesde = contrato.FechaDesde;
+                DateTime fechaHasta = contrato.FechaHasta;
+                var hoy = DateTime.Now;
+                var diferenciaHoras = (fechaHasta - fechaDesde).TotalHours;
+                var cuotas = contrato.Cuotas;
+                var mitad = diferenciaHoras / 2;
+                var diferenciaToDay = (hoy - fechaDesde).TotalHours;
+                var totalRestante = repoPago.ObtenerTotal(entidad.Id);
+                if (mitad > diferenciaToDay)
+                {
+                    TempData["Cuotas"] = "Contrato finalizado, debe " + totalRestante + ", mas 2 Meses de alquiler";
+                    TempData["Inquilino"] = contrato.inquilino.Nombre + " " + contrato.inquilino.Apellido;
+                }
+                else
+                {
+                    TempData["Cuotas"] = "Contrato finalizado, debe " + totalRestante;
+                    TempData["Inquilino"] = contrato.inquilino.Nombre + " " + contrato.inquilino.Apellido;
+                }
+                contrato.FechaHasta = hoy;
+                repoContrato.Modificacion(contrato);
                 repoContrato.Baja(id);
                 return RedirectToAction(nameof(Index));
             }

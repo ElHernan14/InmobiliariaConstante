@@ -146,5 +146,33 @@ namespace InmobiliariaConstante.Controllers
                 return View(entidad);
             }
         }
+
+        [Route("[controller]/BuscarInmuebles/{id}", Name = "BuscarInmuebles")]
+        public IActionResult BuscarInmuebles(int id)
+        {
+            try
+            {
+                var res = repoPropietario.ObtenerInmueblesXPropietario(id);
+                return Json(new { Datos = res });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Error = ex.Message });
+            }
+        }
+
+        [Route("[controller]/InmueblesXContrato/{id}", Name = "InmueblesXContrato")]
+        public IActionResult InmueblesXContrato(int id)
+        {
+            try
+            {
+                var res = repositorio.ObtenerInmueblesXContrato(id);
+                return Json(new { Datos = res });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Error = ex.Message });
+            }
+        }
     }
 }

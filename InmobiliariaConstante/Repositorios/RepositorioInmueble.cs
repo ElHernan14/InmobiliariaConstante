@@ -209,5 +209,46 @@ namespace InmobiliariaConstante.Models
 			}
 			return res;
 		}
+
+		public IList<Contrato> ObtenerInmueblesXContrato(int id)
+		{
+			List<Contrato> res = new List<Contrato>();
+			using (SqlConnection connection = new SqlConnection(connectionString))
+			{
+				string sql = "SELECT c.Id, c.IdInquilino, c.IdInmueble, c.FechaDesde, c.FechaHasta, c.IdGarante, " +
+					" c.Cuotas, c.Estado, i.Nombre, i.Apellido FROM Contrato c " +
+					" JOIN Inquilinos i ON c.IdInquilino = i.IdInquilino WHERE c.IdInmueble = @id;";
+				using (SqlCommand command = new SqlCommand(sql, connection))
+				{
+					command.Parameters.Add("@id", SqlDbType.Int).Value = id;
+					command.CommandType = CommandType.Text;
+					connection.Open();
+					var reader = command.ExecuteReader();
+					while (reader.Read())
+					{
+						Contrato entidad = new Contrato
+						{
+							Id = reader.GetInt32(0),
+							FechaDesde = reader.GetDateTime(3),
+							FechaHasta = reader.GetDateTime(4),
+							IdInquilino = reader.GetInt32(1),
+							IdInmueble = reader.GetInt32(2),
+							IdGarante = reader.GetInt32(5),
+							Cuotas = reader.GetInt32(6),
+							Estado = reader.GetBoolean(7),
+							inquilino = new Inquilino
+							{
+								IdInquilino = reader.GetInt32(1),
+								Nombre = reader.GetString(8),
+								Apellido = reader.GetString(9),
+							},
+						};
+						res.Add(entidad);
+					}
+					connection.Close();
+				}
+			}
+			return res;
+		}
 	}
 }

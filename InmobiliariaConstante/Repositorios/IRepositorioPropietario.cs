@@ -10,5 +10,6 @@ namespace InmobiliariaConstante.Models
 	{
 		Propietario ObtenerPorEmail(string email);
         IList<Propietario> BuscarPorNombre(string nombre);
+        IList<Inmueble> ObtenerInmueblesXPropietario(int id);
     }
 }

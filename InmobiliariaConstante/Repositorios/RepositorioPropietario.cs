@@ -212,5 +212,40 @@ namespace InmobiliariaConstante.Models
             }
             return res;
         }
+
+        public IList<Inmueble> ObtenerInmueblesXPropietario(int id)
+        {
+            List<Inmueble> entidad = new List<Inmueble>();
+            Inmueble p = null;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sql = $"SELECT Id, Direccion, Ambientes, Superficie, Latitud, Longitud, PropietarioId, Estado," +
+                    $" Precio FROM Inmuebles i WHERE i.PropietarioId = {id}";
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    command.CommandType = CommandType.Text;
+                    connection.Open();
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        p = new Inmueble
+                        {
+                            Id = reader.GetInt32(0),
+                            Direccion = reader.GetString(1),
+                            Ambientes = reader.GetInt32(2),
+                            Superficie = reader.GetInt32(3),
+                            Latitud = reader.GetDecimal(4),
+                            Longitud = reader.GetDecimal(5),
+                            PropietarioId = reader.GetInt32(6),
+                            Estado = reader.GetBoolean(7),
+                            Precio = reader.GetDecimal(8),
+                        };
+                        entidad.Add(p);
+                    }
+                    connection.Close();
+                }
+            }
+            return entidad;
+        }
     }
 }

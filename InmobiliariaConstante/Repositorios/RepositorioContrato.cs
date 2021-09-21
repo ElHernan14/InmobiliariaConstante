@@ -45,7 +45,7 @@ namespace InmobiliariaConstante.Models
             int res = -1;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"DELETE FROM Contrato WHERE Id = {id}";
+                string sql = $"UPDATE Contrato SET Estado = 0 WHERE Id = {id}";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.CommandType = CommandType.Text;
@@ -71,8 +71,8 @@ namespace InmobiliariaConstante.Models
                     command.Parameters.AddWithValue("@FechaDesde", entidad.FechaDesde);
                     command.Parameters.AddWithValue("@FechaHasta", entidad.FechaHasta);
                     command.Parameters.AddWithValue("@IdGarante", entidad.IdGarante);
-                    command.Parameters.AddWithValue("@ValorInmueble", entidad.Cuotas);
-                    command.Parameters.AddWithValue("@IdGarante", entidad.IdGarante);
+                    command.Parameters.AddWithValue("@Cuotas", entidad.Cuotas);
+                    command.Parameters.AddWithValue("@Id", entidad.Id);
                     command.Parameters.AddWithValue("@Estado", entidad.Estado);
                     command.CommandType = CommandType.Text;
                     connection.Open();
@@ -200,10 +200,11 @@ namespace InmobiliariaConstante.Models
             IList<Inmueble> inmuebles = new List<Inmueble>();
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"SELECT i.Id, i.Direccion, i.Precio FROM Inmuebles i LEFT JOIN (SELECT c.IdInmueble FROM Contrato c"
+                string sql = $"SELECT i.Id, i.Direccion, i.Ambientes, i.Superficie, i.Latitud, i.Longitud" +
+                                $", i.Estado, i.Precio FROM Inmuebles i LEFT JOIN (SELECT c.IdInmueble FROM Contrato c"
                                 + " WHERE ((@fechaDesde BETWEEN c.FechaDesde AND c.FechaHasta)"
                                 + " OR (@fechaHasta BETWEEN c.FechaDesde AND c.FechaHasta)) " 
-                                + " AND c.IdInmueble != @IdActual) x"
+                                + " AND c.IdInmueble != @IdActual AND c.Estado = 1) x"
                                 + " ON i.Id = x.IdInmueble"
                                 + " WHERE x.IdInmueble IS NULL; ";
                 using (SqlCommand command = new SqlCommand(sql, connection))
@@ -219,7 +220,12 @@ namespace InmobiliariaConstante.Models
                         {
                             Id = reader.GetInt32(0),
                             Direccion = reader.GetString(1),
-                            Precio = reader.GetDecimal(2)
+                            Ambientes = reader.GetInt32(2),
+                            Superficie = reader.GetInt32(3),
+                            Latitud = reader.GetDecimal(4),
+                            Longitud = reader.GetDecimal(5),
+                            Estado = reader.GetBoolean(6),
+                            Precio = reader.GetDecimal(7),
                         };
                         inmuebles.Add(entidad);
                     }

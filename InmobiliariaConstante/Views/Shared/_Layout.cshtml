@@ -63,20 +63,111 @@
         </nav>
     </header>
 
-    @if (ViewBag.Cuotas != null)
-    {//Cancelar Contrato
-        
-    }
-
+    
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
+            <!-- Modal -->
+            <div class="modal fade bd-example-modal-xl" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="titulo"></h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Codigo
+                                        </th>
+                                        <th>
+                                            Direccion
+                                        </th>
+                                        <th>
+                                            Ambientes
+                                        </th>
+                                        <th>
+                                            Superficie
+                                        </th>
+                                        <th>
+                                            Latitud
+                                        </th>
+                                        <th>
+                                            Longitud
+                                        </th>
+                                        <th>
+                                            Estado
+                                        </th>
+                                        <th>
+                                            Precio
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodypa">
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal -->
+            <!-- Modal Inmuebles X Contrato -->
+            <div class="modal fade bd-example-modal-xl" id="inmueblesXContrato" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="tcontrato"></h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Codigo
+                                        </th>
+                                        <th>
+                                            Inquilino
+                                        </th>
+                                        <th>
+                                            Cuotas
+                                        </th>
+                                        <th>
+                                            Estado
+                                        </th>
+                                        <th>
+                                            Fecha de Inicio
+                                        </th>
+                                        <th>
+                                            Fecha de fin
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodycontratos">
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal Inmuebles X Contrato -->
+            @section Scripts {
+                @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+            }
         </main>
     </div>
-
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -6,9 +6,37 @@
 
 <h1>Contratos</h1>
 
+@{ if (ViewBag.Cuotas != null)
+    {//Cancelar Contrato
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>¡EnHorabuena @ViewBag.Inquilino!</strong> @ViewBag.Cuotas
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true"><span class="lnr lnr-cross-circle"></span></span>
+            </button>
+        </div>
+    }
+}
 <p>
     <a asp-action="Create">Crear nuevo Contrato</a>
 </p>
+<p>
+    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#asd" aria-expanded="false" aria-controls="collapseExample">
+        Ver Inmuebles disponibles
+    </button>
+</p>
+<div class="collapse" id="asd">
+    <div class="card card-body">
+        <div class="form-row">
+            <label class="control-label">Fecha Inicio</label>
+            <input id="fechaInicio" class="form-control" type="date" />
+            <label class="control-label">Fecha de cierre</label>
+            <input id="fechaFinal" class="form-control" type="date" />
+        </div>
+        <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#exampleModal" onclick="buscarInmueblesDisponibles()" >
+            Buscar
+        </button>
+    </div>
+</div>
 <table class="table">
     <thead>
         <tr>
@@ -28,6 +56,9 @@
                 @Html.DisplayNameFor(model => model.IdGarante)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Estado)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.FechaDesde)
             </th>
             <th>
@@ -37,36 +68,57 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @(item.inquilino.Nombre + " " +item.inquilino.Apellido)
-            </td>
-            <td>
-                @(item.inmueble.Direccion)
-            </td>
-            <td>
-                @(item.Cuotas)
-            </td>
-            <td>
-                @(item.garante.Nombre + " " + item.garante.Apellido)
-            </td>
-            <td>
-                @(item.FechaDesde.ToString("d"))
-            </td>
-            <td>
-                @(item.FechaHasta.ToString("d"))
-            </td>
-            <td>
-                @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Detalles", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Eliminar", "Delete", new { id = item.Id }) |
-                @Html.ActionLink("Pagos", "Index", "Pago", new { id = item.Id})
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @(item.inquilino.Nombre + " " + item.inquilino.Apellido)
+                </td>
+                <td>
+                    @(item.inmueble.Direccion)
+                </td>
+                <td>
+                    @(item.Cuotas)
+                </td>
+                <td>
+                    @(item.garante.Nombre + " " + item.garante.Apellido)
+                </td>
+                @{ if (item.Estado == false)
+                    {
+                        <td>
+                            Contrato Cancelado
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            Contrato Vigente
+                        </td>
+                    }
+                }
+                <td>
+                    @(item.FechaDesde.ToString("d"))
+                </td>
+                <td>
+                    @(item.FechaHasta.ToString("d"))
+                </td>
+                <td>
+                    @Html.ActionLink("Detalles", "Details", new { id = item.Id })
+                    @{ if (item.Estado != false)
+                        {
+                            @Html.ActionLink("Editar", "Edit", new { id = item.Id })
+                            @Html.ActionLink("Eliminar", "Delete", new { id = item.Id })
+                            @Html.ActionLink("Pagos", "Index", "Pago", new { id = item.Id })
+                        }
+                    }
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
