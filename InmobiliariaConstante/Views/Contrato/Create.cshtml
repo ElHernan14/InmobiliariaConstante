@@ -71,7 +71,7 @@
     var selectDesde = document.getElementById('selectDesde');
     var selectHasta = document.getElementById('selectHasta');
     var selectInmueble = document.getElementById('selectInmueble');
-    function buscarInmuebles() {
+    function buscarInmueblesSelect() {
         let myObjectJSON = {};
         var FechaDesde = selectDesde.value;
         var FechaHasta = selectHasta.value;
@@ -100,11 +100,13 @@
 
 
     selectHasta.addEventListener('change', () => {
+        debugger;
+
         const $select = document.querySelector("#selectInmueble");
         var FechaDesde = selectDesde.value;
         var FechaHasta = selectHasta.value;
         if (FechaDesde < FechaHasta) {
-            buscarInmuebles();
+            buscarInmueblesSelect();
         } else {
             for (let i = $select.options.length; i >= 0; i--) {
                 $select.remove(i);
@@ -119,7 +121,4 @@
     });
 
 </script>
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
 

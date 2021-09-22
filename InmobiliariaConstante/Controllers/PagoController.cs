@@ -38,6 +38,7 @@ namespace InmobiliariaConstante.Controllers
             ViewBag.Id = id;
             ViewBag.ValorInmueble = valorInmueble;
             ViewBag.Cuotas = cuotas;
+            ViewBag.Inquilino = contrato.inquilino.Nombre + " " + contrato.inquilino.Apellido;
             
             return View(entidad);
         }

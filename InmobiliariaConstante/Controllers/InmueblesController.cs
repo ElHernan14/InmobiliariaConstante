@@ -71,9 +71,9 @@ namespace InmobiliariaConstante.Controllers
             try
             {
                 entidad.Estado = true;
-                    repositorio.Alta(entidad);
-                    TempData["Id"] = entidad.Id;
-                    return RedirectToAction(nameof(Index));
+                repositorio.Alta(entidad);
+                TempData["Id"] = entidad.Id;
+                return RedirectToAction(nameof(Index));
 
             }
             catch (Exception ex)
@@ -119,6 +119,7 @@ namespace InmobiliariaConstante.Controllers
         }
 
         // GET: Inmueble/Eliminar/5
+        [Authorize(Policy = "Administrador")]
         public ActionResult Eliminar(int id)
         {
             var entidad = repositorio.ObtenerPorId(id);
@@ -132,6 +133,7 @@ namespace InmobiliariaConstante.Controllers
         // POST: Inmueble/Eliminar/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Eliminar(int id, Inmueble entidad)
         {
             try

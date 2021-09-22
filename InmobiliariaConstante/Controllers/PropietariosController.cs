@@ -129,6 +129,7 @@ namespace InmobiliariaConstante.Controllers
         }
 
         // GET: PropietariosController/Delete/5
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
             try
@@ -143,6 +144,7 @@ namespace InmobiliariaConstante.Controllers
         }
 
         // POST: PropietariosController/Delete/5
+        [Authorize(Policy = "Administrador")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, Propietario entidad)

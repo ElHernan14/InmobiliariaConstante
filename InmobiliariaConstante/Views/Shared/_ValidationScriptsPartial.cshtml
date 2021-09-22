@@ -1,9 +1,19 @@
-﻿<script type="text/javascript">
+﻿<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script type="text/javascript">
     var tituloContrato = document.getElementById("tcontrato");
     var titulo = document.getElementById("titulo");
     var fechaInicio = document.getElementById('fechaInicio');
     var fechaFinal = document.getElementById('fechaFinal');
 
+    function convertDateFormat(string) {
+        var info = string.split('T00:00:00').join('');
+        var completo = info.split("-").reverse().join('/');
+        return completo;
+    }
     function InmueblesXContrato(id, direccion) {
         let myObjectJSON = {};
         url = `@Url.Action("InmueblesXContrato", "Inmuebles", new { id = "idInmueble" })`;
@@ -19,6 +29,8 @@
             tituloContrato.innerHTML = direccion;
             $("#tbodycontratos tr").remove();
             for (let x of myObjectJSON.datos) {
+                let fechad = convertDateFormat(x.fechaDesde)
+                let fechah = convertDateFormat(x.fechaHasta)
                 let estado;
                 if (x.estado == true) { estado = "Contrato cancelado" }
                 else { estado = "Contrato cancelado" }
@@ -27,8 +39,8 @@
                 + "<td>" + x.inquilino.nombre + " " + x.inquilino.apellido + "</td>"
                 + "<td>" + x.cuotas + "</td>"
                 + "<td>" + estado + "</td>"
-                + "<td>" + x.fechaDesde +"</td>"
-                + "<td>" + x.fechaHasta +"</td>"
+                + "<td>" + fechad +"</td>"
+                + "<td>" + fechah +"</td>"
                 + "</tr> ");
             }
         }).fail(res => {
@@ -111,8 +123,3 @@
         });
     }
 </script>
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
-<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>

@@ -6,9 +6,10 @@
     var valor = ViewBag.ValorInmueble;
     var cuotas = ViewBag.Cuotas;
     var mensaje = ViewBag.Mensaje;
+    var inquilino = ViewBag.Inquilino;
 }
 
-<h1>Pagos del Contrato</h1>
+<h1>Pagos del Contrato de @inquilino</h1>
 @if (mensaje != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -31,16 +32,13 @@ else
                 @Html.DisplayNameFor(model => model.Id)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.NumeroDePago)
+                @Html.DisplayNameFor(model => model.Monto)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.FechaDePago)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Monto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdContrato)
+                @Html.DisplayNameFor(model => model.NumeroDePago)
             </th>
             <th></th>
         </tr>
@@ -48,28 +46,25 @@ else
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NumeroDePago)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FechaDePago)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Monto)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IdContrato)
-                </td>
-                <td>
-                    @Html.ActionLink("Detalles", "Details", new { id = item.Id })
-                    @Html.ActionLink("Editar", "Edit", new { id = item.Id })
-                    @Html.ActionLink("Eliminar", "Delete", new { id = item.Id })
-                </td>
-            </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Monto)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaDePago)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NumeroDePago)
+            </td>
+            <td>
+                @Html.ActionLink("Detalles", "Details", new { id = item.Id })
+                @Html.ActionLink("Editar", "Edit", new { id = item.Id })
+                @Html.ActionLink("Eliminar", "Delete", new { id = item.Id })
+            </td>
+        </tr>
         }
     </tbody>
 </table>

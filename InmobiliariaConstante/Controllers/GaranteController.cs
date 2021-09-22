@@ -106,6 +106,7 @@ namespace InmobiliariaConstante.Controllers
         }
 
         // GET: Inquilino/Delete/5
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
             Garante garante = repositorio.ObtenerPorId(id);
@@ -113,6 +114,7 @@ namespace InmobiliariaConstante.Controllers
         }
 
         // POST: Inquilino/Delete/5
+        [Authorize(Policy = "Administrador")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
