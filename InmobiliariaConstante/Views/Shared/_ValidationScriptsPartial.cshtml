@@ -1,13 +1,21 @@
-﻿<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
-<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+﻿
+
 <script type="text/javascript">
+    debugger;
     var tituloContrato = document.getElementById("tcontrato");
     var titulo = document.getElementById("titulo");
     var fechaInicio = document.getElementById('fechaInicio');
     var fechaFinal = document.getElementById('fechaFinal');
+    var mensajeFecha = document.getElementById('mensajeFecha');
+    $(document).ready(function () {
+        if (mensajeFecha != null) {
+            $('#asd').collapse('show');
+        }
+        $(function () {
+            $('#mi-tabla').tablesorter();
+        });
+    });
+   
 
     function convertDateFormat(string) {
         var info = string.split('T00:00:00').join('');
@@ -86,40 +94,60 @@
         });
     }
     function buscarInmueblesDisponibles() {
+        debugger;
+        boolModal =  false;
         let myObjectJSON = {};
         var fechai = fechaInicio.value;
         var fechaf = fechaFinal.value;
         url = `@Url.Action("Buscar", "Contrato", new { fechaDesde = "fechaDesde", fechaHasta = "fechaHasta", idActual = "idActual" })`;
         url = url.replace("fechaDesde", fechai)
             .replace("fechaHasta", fechaf)
-            .replace("idActual",null);
-        return $.ajax({
-            url: url,
-        }).done(res => {
-            myObjectJSON = res;
-            if (!myObjectJSON.datos) {
-                return alert("No hay inmuebles disponibles");
+            .replace("idActual", null);
+       
+        if ((fechaf != "") && (fechai != "")) {
+            if (fechaf < fechai) {
+                let mensaje = "Por favor, seleccione fechas correctas";
+                window.location.replace("https://localhost:44300/Contrato?malo=" + mensaje);
+            } else {
+                if (mensajeFecha != null) {
+                    mensajeFecha.innerHTML = "";
+                }
+                return $.ajax({
+                    url: url,
+                }).done(res => {
+                    myObjectJSON = res;
+                    if (!myObjectJSON.datos) {
+                        return alert("No hay inmuebles disponibles");
+                    }
+
+                    titulo.innerHTML = "";
+                    titulo.innerHTML = "Inmuebles Disponibles";
+                    $("#tbodypa tr").remove();
+                    for (let x of myObjectJSON.datos) {
+                        let estado;
+                        if (x.estado == true) { estado = "Disponible" }
+                        else { estado = "No disponible" }
+                        $("#tbodypa").append("<tr>"
+                            + "<td>" + x.id + "</td>"
+                            + "<td>" + x.direccion + "</td>"
+                            + "<td>" + x.ambientes + "</td>"
+                            + "<td>" + x.superficie + "</td>"
+                            + "<td>" + x.latitud + "</td>"
+                            + "<td>" + x.longitud + "</td>"
+                            + "<td>" + estado + "</td>"
+                            + "<td>" + x.precio + "</td>"
+                            + "</tr> ");
+                    }
+                }).fail(res => {
+                    console.log("Error: ", res);
+                });
             }
-            titulo.innerHTML = "";
-            titulo.innerHTML = "Inmuebles Disponibles";
-            $("#tbodypa tr").remove();
-            for (let x of myObjectJSON.datos) {
-                let estado;
-                if (x.estado == true) { estado = "Disponible" }
-                else { estado = "No disponible"}
-                $("#tbodypa").append("<tr>"
-                    + "<td>" + x.id + "</td>"
-                    + "<td>" + x.direccion + "</td>"
-                    + "<td>" + x.ambientes + "</td>"
-                    + "<td>" + x.superficie + "</td>"
-                    + "<td>" + x.latitud + "</td>"
-                    + "<td>" + x.longitud + "</td>"
-                    + "<td>" + estado + "</td>"
-                    + "<td>" + x.precio + "</td>"
-                    + "</tr> ");
-            }
-        }).fail(res => {
-            console.log("Error: ", res);
-        });
-    }
+        } else {
+            
+            let mensaje = "Por favor, llene los dos campos";
+            window.location.replace("https://localhost:44300/Contrato?malo="+mensaje);
+            //$('#exampleModal').modal().show()
+            //$("#exampleModal .close").click()
+        }
+    }    
 </script>

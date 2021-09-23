@@ -137,7 +137,7 @@ namespace InmobiliariaConstante.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "Administrador")]
-        public ActionResult Edit(int id, Usuario u)
+        public async Task<IActionResult> Edit(int id, Usuario u)
         {
             var vista = nameof(Edit);
             try
@@ -186,6 +186,19 @@ namespace InmobiliariaConstante.Controllers
                     u.Avatar = res.Avatar;
                     repositorio.Modificacion(u);
                 }
+                var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name, u.Email),
+                        new Claim("FullName", u.Nombre + " " + u.Apellido),
+                        new Claim(ClaimTypes.Role, u.RolNombre),
+                    };
+
+                var claimsIdentity = new ClaimsIdentity(
+                    claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimsIdentity));
                 return RedirectToAction(nameof(Perfil), "Usuarios", new {id = u.Id});
             }
             catch (Exception ex)

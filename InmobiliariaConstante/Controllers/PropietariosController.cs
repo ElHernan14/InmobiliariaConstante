@@ -107,18 +107,27 @@ namespace InmobiliariaConstante.Controllers
         // POST: PropietariosController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Propietario propietario)
         {
             Propietario p = null;
             try
             {
                 p = repositorio.ObtenerPorId(id);
-                p.Nombre = collection["Nombre"];
-                p.Apellido = collection["Apellido"];
-                p.Dni = collection["Dni"];
-                p.Email = collection["Email"];
-                p.Telefono = collection["Telefono"];
-                repositorio.Modificacion(p);
+                if(propietario.Clave == "")
+                {
+                    propietario.Clave = p.Clave;
+                }
+                else
+                {
+                    propietario.Clave = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                        password: propietario.Clave,
+                        salt: System.Text.Encoding.ASCII.GetBytes(config["Salt"]),
+                        prf: KeyDerivationPrf.HMACSHA1,
+                        iterationCount: 1000,
+                        numBytesRequested: 256 / 8));
+                }
+                propietario.IdPropietario = id;
+                repositorio.Modificacion(propietario);
                 TempData["Mensaje"] = "Datos guardados correctamente";
                 return RedirectToAction(nameof(Index));
             }

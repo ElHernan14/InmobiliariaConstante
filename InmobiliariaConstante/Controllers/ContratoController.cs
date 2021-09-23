@@ -31,7 +31,7 @@ namespace InmobiliariaConstante.Controllers
         }
 
         // GET: ContratoController
-        public ActionResult Index()
+        public ActionResult Index(string malo)
         {
             var inquilino = TempData["Inquilino"];
             var cuotas = TempData["Cuotas"];
@@ -40,6 +40,7 @@ namespace InmobiliariaConstante.Controllers
                 ViewBag.Cuotas = cuotas;
                 ViewBag.Inquilino = inquilino;
             }
+            ViewBag.Malo = malo;
             var lista = repoContrato.ObtenerTodos();
             return View(lista);
         }
@@ -142,18 +143,16 @@ namespace InmobiliariaConstante.Controllers
                 DateTime fechaHasta = contrato.FechaHasta;
                 var hoy = DateTime.Now;
                 var diferenciaHoras = (fechaHasta - fechaDesde).TotalHours;
-                var cuotas = contrato.Cuotas;
                 var mitad = diferenciaHoras / 2;
                 var diferenciaToDay = (hoy - fechaDesde).TotalHours;
-                var totalRestante = repoPago.ObtenerTotal(entidad.Id);
                 if (mitad > diferenciaToDay)
                 {
-                    TempData["Cuotas"] = "Contrato finalizado, debe " + totalRestante + ", mas 2 Meses de alquiler";
+                    TempData["Cuotas"] = "Contrato finalizado, debe 2 Meses de alquiler";
                     TempData["Inquilino"] = contrato.inquilino.Nombre + " " + contrato.inquilino.Apellido;
                 }
                 else
                 {
-                    TempData["Cuotas"] = "Contrato finalizado, debe " + totalRestante;
+                    TempData["Cuotas"] = "Contrato finalizado, debe 1 mes de alquiler";
                     TempData["Inquilino"] = contrato.inquilino.Nombre + " " + contrato.inquilino.Apellido;
                 }
                 contrato.FechaHasta = hoy;

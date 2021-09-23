@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Contratos";
+    var malo = ViewBag.Malo;
 }
 
 <h1>Contratos</h1>
@@ -31,13 +32,20 @@
             <input id="fechaInicio" class="form-control" type="date" />
             <label class="control-label">Fecha de cierre</label>
             <input id="fechaFinal" class="form-control" type="date" />
+            @{if (malo != null)
+            {
+                        <span class="text-danger" id="mensajeFecha">@malo</span>
+            } 
+
+            }
+            
         </div>
-        <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#exampleModal" onclick="buscarInmueblesDisponibles()" >
+        <a class="btn btn-primary" data-toggle="modal" href="#exampleModal" onclick="buscarInmueblesDisponibles()">
             Buscar
-        </button>
+        </a>
     </div>
 </div>
-<table class="table">
+<table class="table" id="mi-tabla">
     <thead>
         <tr>
             <th>
@@ -106,14 +114,17 @@
                     @(item.FechaHasta.ToString("d"))
                 </td>
                 <td>
-                    @Html.ActionLink("Detalles", "Details", new { id = item.Id })
-                    @{ if (item.Estado != false)
-                        {
-                            @Html.ActionLink("Editar", "Edit", new { id = item.Id })
-                            @Html.ActionLink("Eliminar", "Delete", new { id = item.Id })
-                            @Html.ActionLink("Pagos", "Index", "Pago", new { id = item.Id })
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <a asp-controller="Contrato" asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary" title="Detalles"><i class="fas fa-info"></i></a>
+                        @{ if (item.Estado != false)
+                            {
+                                <a asp-controller="Contrato" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary" title="Editar"><i class="fas fa-user-edit"></i></a>
+                                <a asp-controller="Contrato" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger" title="Eliminar"><i class="fas fa-user-minus"></i></a>
+                                <a asp-controller="Pago" asp-action="Index" asp-route-id="@item.Id" class="btn btn-success" title="Pagos"><i class="fas fa-hand-holding-usd"></i></a>
+                            }
                         }
-                    }
+
+                    </div>
                 </td>
             </tr>
         }

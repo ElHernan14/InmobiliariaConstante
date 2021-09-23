@@ -4,13 +4,10 @@
 
 <div class="text-center">
     <h1 class="display-4">Bienvenido a Inmobiliaria Constante Raices</h1>
-    @*<p>@(User.Claims.First(x => x.Type == "FullName").Value)</p>
-    <ul>
-        @foreach (var c in User.Claims)
-        {
-            <li><b>@(c.Type+": ")</b>@c.Value</li>
-        }
-    </ul>*@
+    @if (User.Identity.IsAuthenticated)
+    {
+        <h4>Usuario: @(User.Claims.First(x => x.Type == "FullName").Value)</h4>
+    }
 </div>
 @if (ViewBag.Error || !User.Identity.IsAuthenticated)
 {

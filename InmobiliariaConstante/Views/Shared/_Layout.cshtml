@@ -16,7 +16,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3" >
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Inmobiliaria Constante</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -24,29 +24,29 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                    <ul class="navbar-nav flex-grow-1" style="color:white;">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
                         </li>
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Index">Usuarios</a>
+                                <a class="nav-link text-white" asp-area="" asp-controller="Usuarios" asp-action="Index">Usuarios</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Propietarios" asp-action="Index">Propietarios</a>
+                                <a class="nav-link text-white" asp-area="" asp-controller="Propietarios" asp-action="Index">Propietarios</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Inquilinos" asp-action="Index">Inquilinos</a>
+                                <a class="nav-link text-white" asp-area="" asp-controller="Inquilinos" asp-action="Index">Inquilinos</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Inmuebles" asp-action="Index">Inmuebles</a>
+                                <a class="nav-link text-white" asp-area="" asp-controller="Inmuebles" asp-action="Index">Inmuebles</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Garante" asp-action="Index">Garantes</a>
+                                <a class="nav-link text-white" asp-area="" asp-controller="Garante" asp-action="Index">Garantes</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Contrato" asp-action="Index">Contratos</a>
+                                <a class="nav-link text-white" asp-area="" asp-controller="Contrato" asp-action="Index">Contratos</a>
                             </li>
                         }
                     </ul>
@@ -73,18 +73,18 @@
         <main role="main" class="pb-3">
             @RenderBody()
             <!-- Modal -->
-            <div class="modal fade bd-example-modal-xl" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+            <div class="modal fade bd-example-modal-xl" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true" >
                 <div class="modal-dialog modal-xl" role="document">
                     <div class="modal-content">
-                        <div class="modal-header">
+                        <div class="modal-header" style="background-color:black;color:white;">
                             <h5 class="modal-title" id="titulo"></h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body">
+                        <div class="modal-body" >
                             <table class="table">
-                                <thead>
+                                <thead style="background-color:black;color:white;">
                                     <tr>
                                         <th>
                                             Codigo
@@ -110,9 +110,11 @@
                                         <th>
                                             Precio
                                         </th>
+                                        <th>
+                                        </th>
                                     </tr>
                                 </thead>
-                                <tbody id="tbodypa">
+                                <tbody id="tbodypa" style="font-weight: bold; background: rgb(2,0,36); background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(0,212,255,1) 0%, rgba(177,110,38,1) 0%, rgba(217,150,45,1) 0%, rgba(154,126,64,1) 65%, rgba(126,115,72,1) 99%);">
                                 </tbody>
                             </table>
                         </div>
@@ -127,15 +129,15 @@
             <div class="modal fade bd-example-modal-xl" id="inmueblesXContrato" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-xl" role="document">
                     <div class="modal-content">
-                        <div class="modal-header">
+                        <div class="modal-header" style="background-color:black;font-weight:bold; color:white;">
                             <h5 class="modal-title" id="tcontrato"></h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body">
+                        <div class="modal-body" style="background: rgb(2,0,36); background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(0,212,255,1) 0%, rgba(177,110,38,1) 0%, rgba(72,118,126,1) 90%);">
                             <table class="table">
-                                <thead>
+                                <thead style="background-color:black;color:white;">
                                     <tr>
                                         <th>
                                             Codigo
@@ -157,7 +159,7 @@
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody id="tbodycontratos">
+                                <tbody id="tbodycontratos" style="font-weight:bold;">
                                 </tbody>
                             </table>
                         </div>

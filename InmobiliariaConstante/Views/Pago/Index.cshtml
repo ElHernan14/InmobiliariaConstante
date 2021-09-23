@@ -60,9 +60,11 @@ else
                 @Html.DisplayFor(modelItem => item.NumeroDePago)
             </td>
             <td>
-                @Html.ActionLink("Detalles", "Details", new { id = item.Id })
-                @Html.ActionLink("Editar", "Edit", new { id = item.Id })
-                @Html.ActionLink("Eliminar", "Delete", new { id = item.Id })
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <a asp-controller="Pago" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary" title="Editar"><i class="fas fa-user-edit"></i></a>
+                    <a asp-controller="Pago" asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary" title="Detalles"><i class="fas fa-info"></i></a>
+                    <a asp-controller="Pago" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger" title="Eliminar"><i class="fas fa-user-minus"></i></a>
+                </div>
             </td>
         </tr>
         }

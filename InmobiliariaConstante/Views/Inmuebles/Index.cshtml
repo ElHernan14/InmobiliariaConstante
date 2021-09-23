@@ -83,9 +83,11 @@
                 @Html.DisplayFor(modelItem => item.Precio)
             </td>
             <td>
-                @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Detalles", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Eliminar", "Eliminar", new { id = item.Id })
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <a asp-controller="Inmuebles" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary" title="Editar"><i class="fas fa-user-edit"></i></a>
+                    <a asp-controller="Inmuebles" asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary" title="Detalles"><i class="fas fa-info"></i></a>
+                    <a asp-controller="Inmuebles" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger" title="Eliminar"><i class="fas fa-user-minus"></i></a>
+                </div>
             </td>
         </tr>
 }

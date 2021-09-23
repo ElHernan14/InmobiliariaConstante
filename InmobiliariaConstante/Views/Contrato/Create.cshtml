@@ -98,27 +98,33 @@
         });
     }
 
-
-    selectHasta.addEventListener('change', () => {
-        debugger;
-
+    function obtener() {
         const $select = document.querySelector("#selectInmueble");
         var FechaDesde = selectDesde.value;
         var FechaHasta = selectHasta.value;
-        if (FechaDesde < FechaHasta) {
-            buscarInmueblesSelect();
-        } else {
-            for (let i = $select.options.length; i >= 0; i--) {
-                $select.remove(i);
+        if ((FechaDesde.length != 0) && (FechaHasta.length != 0)) {
+            if (FechaDesde < FechaHasta) {
+                buscarInmueblesSelect();
+            } else {
+                for (let i = $select.options.length; i >= 0; i--) {
+                    $select.remove(i);
+                }
+                const option = document.createElement('option');
+                option.text = "-- Seleccione fechas correctas --";
+                $select.appendChild(option);
+                alert("La Fecha de inicio debe ser menor a la final")
+                return false;
             }
-            const option = document.createElement('option');
-            option.text = "-- Seleccione fechas correctas --";
-            $select.appendChild(option);
-            alert("La Fecha de inicio debe ser menor a la final")
-            return false;
         }
+    }
 
+    selectHasta.addEventListener('change', () => {
+        obtener();
     });
+    selectDesde.addEventListener('change', () => {
+        obtener();
+    })
+
 
 </script>
 
