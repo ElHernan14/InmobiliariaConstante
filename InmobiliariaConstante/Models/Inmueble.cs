@@ -28,5 +28,6 @@ namespace InmobiliariaConstante.Models
         [Required]
         [Display(Name = "Precio")]
         public decimal Precio { get; set; }
+        public string Avatar { get; set; }
     }
 }

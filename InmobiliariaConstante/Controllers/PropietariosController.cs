@@ -17,7 +17,7 @@ namespace InmobiliariaConstante.Controllers
         private readonly IRepositorioPropietario repositorio;
         private readonly IConfiguration config;
 
-        public PropietariosController(IConfiguration config, IRepositorioPropietario repositorio)
+        public PropietariosController(IRepositorioPropietario repositorio, IConfiguration config)
         {
             this.repositorio = repositorio;
             this.config = config;
